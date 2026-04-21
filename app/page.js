@@ -1,65 +1,151 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
+import io from "socket.io-client";
+import dynamic from "next/dynamic";
+import WaterLevelChart from "@/components/WaterLevelChart";
+import FloodAlert from "@/components/FloodAlert";
+
+const MapRealtime = dynamic(() => import("@/components/MapRealtime"), {
+  ssr: false,
+});
+
+let socket;
 
 export default function Home() {
+  const [data, setData] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [selectedSensor, setSelectedSensor] = useState(1);
+  const [alerts, setAlerts] = useState([]);
+
+  const handleCloseAlert = (id) => {
+    setAlerts((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  // Fetch awal
+  const fetchData = async () => {
+    const res = await fetch("/api/latest-data");
+    const result = await res.json();
+    setData(result);
+  };
+
+  const fetchChart = async (sensorId) => {
+    const res = await fetch(`/api/history?id_sensor=${sensorId}`);
+    const result = await res.json();
+    setChartData(result);
+  };
+
+  useEffect(() => {
+    const init = async () => {
+      // Ambil data awal (map)
+      const res = await fetch("/api/latest-data");
+      const result = await res.json();
+      setData(result);
+
+      // Ambil data awal grafik
+      const chartRes = await fetch(`/api/history?id_sensor=${selectedSensor}`);
+      const chartResult = await chartRes.json();
+      setChartData(chartResult);
+
+      // Setup socket
+      const socketInstance = io("http://localhost:3000");
+
+      socketInstance.on("new-data", (newData) => {
+        console.log("Realtime:", newData);
+
+        // 🚨 ALERT BANJIR
+        if (newData.status === "bahaya") {
+          setAlerts((prev) => {
+            // Hindari duplikasi alert dari sensor yang sama
+            const exists = prev.find((a) => a.id_sensor === newData.id_sensor);
+            if (exists) return prev;
+
+            return [
+              ...prev,
+              {
+                id: Date.now(),
+                id_sensor: newData.id_sensor,
+                nama_sensor:
+                  newData.nama_sensor || `Sensor ${newData.id_sensor}`,
+                tinggi_air: newData.tinggi_air,
+              },
+            ];
+          });
+        }
+
+        // 🔹 Update MAP
+        setData((prev) => {
+          const filtered = prev.filter(
+            (item) => item.id_sensor !== newData.id_sensor,
+          );
+          return [...filtered, newData];
+        });
+
+        // 🔹 Update CHART (hanya sensor aktif)
+        if (newData.id_sensor === selectedSensor) {
+          setChartData((prev) =>
+            [
+              ...prev,
+              {
+                tinggi_air: newData.tinggi_air,
+                timestamp: newData.timestamp,
+              },
+            ].slice(-20),
+          ); // ambil 20 data terakhir
+        }
+      });
+
+      socket = socketInstance;
+    };
+
+    init();
+
+    return () => {
+      if (socket) socket.disconnect();
+    };
+  }, [selectedSensor]);
+
+  useEffect(() => {
+    if (alerts.length > 0) {
+      const timer = setTimeout(() => {
+        setAlerts((prev) => prev.slice(1));
+      }, 10000); // 10 detik
+
+      return () => clearTimeout(timer);
+    }
+  }, [alerts]);
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <div style={{ padding: "20px" }}>
+      <FloodAlert alerts={alerts} onClose={handleCloseAlert} />
+      <h1>Dashboard Monitoring Banjir</h1>
+
+      <MapRealtime data={data} />
+
+      <h2>Data Realtime</h2>
+      <ul>
+        {data.map((d) => (
+          <li key={d.id_sensor}>
+            {d.nama_sensor} - {d.tinggi_air} cm ({d.status})
+          </li>
+        ))}
+      </ul>
+
+      <h2>Grafik Ketinggian Air</h2>
+      <select
+        onChange={(e) => {
+          const val = Number(e.target.value);
+          setSelectedSensor(val);
+          fetchChart(val);
+        }}
+      >
+        {data.map((s) => (
+          <option key={s.id_sensor} value={s.id_sensor}>
+            {s.nama_sensor}
+          </option>
+        ))}
+      </select>
+
+      <WaterLevelChart chartData={chartData} />
     </div>
   );
 }
