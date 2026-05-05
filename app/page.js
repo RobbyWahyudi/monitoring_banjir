@@ -54,7 +54,7 @@ export default function Home() {
 
       socketInstance.on("new-data", (newData) => {
         const sent = Number(newData.sent_time);
-        // const receive = Date.now();
+        const receive = Date.now();
         const latency = Math.abs(receive - sent);
 
         // console.log("Realtime:", newData);
