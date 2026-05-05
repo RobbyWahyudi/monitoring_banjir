@@ -34,7 +34,7 @@ export async function POST(req) {
     const newData = fullData.rows[0];
 
     if (global.io) {
-      global.io.emit("new-data", newData);
+      global.io.emit("new-data", { ...newData, sent_time: Date.now() });
     }
 
     return Response.json({
