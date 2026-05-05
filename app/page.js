@@ -54,13 +54,13 @@ export default function Home() {
 
       socketInstance.on("new-data", (newData) => {
         const sent = Number(newData.sent_time);
-        const receive = Date.now();
+        // const receive = Date.now();
         const latency = Math.abs(receive - sent);
 
-        console.log("Realtime:", newData);
+        // console.log("Realtime:", newData);
 
-        console.log("Sent:", sent);
-        console.log("Receive:", receive);
+        // console.log("Sent:", sent);
+        // console.log("Receive:", receive);
         console.log("Latency:", latency, "ms");
 
         // 🚨 ALERT BANJIR
