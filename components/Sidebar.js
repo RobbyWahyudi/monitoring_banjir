@@ -3,25 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { 
-  LayoutDashboard, 
-  Map, 
-  History, 
-  Waves,
-  Menu,
-  X
-} from "lucide-react";
+import { LayoutDashboard, Map, History, Menu, X } from "lucide-react";
 
 const Sidebar = () => {
   const pathname = usePathname();
-  const [isOpen, setIsOpen] = React.useState(false);
-
-  React.useEffect(() => {
-    // Open by default on large screens
-    if (window.innerWidth >= 1024) {
-      setIsOpen(true);
-    }
-  }, []);
+  const [isOpen, setIsOpen] = React.useState(
+    () => typeof window !== "undefined" && window.innerWidth >= 1024,
+  );
 
   const menuItems = [
     {
@@ -44,18 +32,18 @@ const Sidebar = () => {
   return (
     <>
       {/* Mobile Toggle */}
-      <button 
-        className={`lg:hidden fixed top-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow-lg transition-all duration-300 ease-in-out ${isOpen ? "left-[290px]" : "left-4"}`}
+      <button
+        className={`lg:hidden fixed top-4 z-50 p-2 bg-blue-600 text-white rounded-lg shadow-lg transition-all duration-300 ease-in-out ${isOpen ? "left-72.5" : "left-4"}`}
         onClick={() => setIsOpen(!isOpen)}
       >
         {isOpen ? <X size={24} /> : <Menu size={24} />}
       </button>
 
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`
           fixed top-0 left-0 h-screen bg-slate-900 text-slate-100 transition-all duration-300 ease-in-out z-40
-          ${isOpen ? "w-[280px] lg:w-64" : "w-0 lg:w-64"} 
+          ${isOpen ? "w-70 lg:w-64" : "w-0 lg:w-64"} 
           overflow-hidden border-r border-slate-800
         `}
       >
@@ -79,16 +67,22 @@ const Sidebar = () => {
                   href={item.path}
                   className={`
                     flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group
-                    ${isActive 
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20" 
-                      : "hover:bg-slate-800 text-slate-400 hover:text-slate-100"}
+                    ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-lg shadow-blue-900/20"
+                        : "hover:bg-slate-800 text-slate-400 hover:text-slate-100"
+                    }
                   `}
                 >
-                  <div className={`${isActive ? "text-white" : "text-blue-400 group-hover:text-blue-300"}`}>
+                  <div
+                    className={`${isActive ? "text-white" : "text-blue-400 group-hover:text-blue-300"}`}
+                  >
                     {item.icon}
                   </div>
                   {isOpen && (
-                    <span className="font-medium whitespace-nowrap">{item.title}</span>
+                    <span className="font-medium whitespace-nowrap">
+                      {item.title}
+                    </span>
                   )}
                 </Link>
               );

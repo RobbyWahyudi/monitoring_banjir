@@ -142,7 +142,7 @@ export default function Home() {
       <FloodAlert alerts={alerts} onClose={handleCloseAlert} />
 
       <div className="flex flex-col gap-2">
-        <h1 className="text-white text-3xl font-bold tracking-tight text-slate-900">
+        <h1 className="text-white text-3xl font-bold tracking-tight">
           Dashboard Monitoring
         </h1>
       </div>
@@ -158,7 +158,7 @@ export default function Home() {
                 </h2>
               </div>
               <select
-                className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 outline-none transition-all min-w-[200px]"
+                className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 outline-none transition-all min-w-50"
                 onChange={(e) => {
                   const val = Number(e.target.value);
                   setSelectedSensor(val);
@@ -172,7 +172,7 @@ export default function Home() {
                 ))}
               </select>
             </div>
-            <div className="w-full h-[300px] md:h-[450px] relative">
+            <div className="w-full h-75 md:h-112.5 relative">
               <WaterLevelChart chartData={chartData} />
             </div>
           </div>
