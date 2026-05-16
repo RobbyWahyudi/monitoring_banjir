@@ -3,7 +3,7 @@
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import { useEffect } from "react";
 import L from "leaflet";
-import { MapPinHouse } from "lucide-react";
+import { MapPinHouse, TriangleAlert } from "lucide-react";
 import { renderToString } from "react-dom/server";
 
 // Fungsi warna marker
@@ -38,7 +38,31 @@ const createCustomIcon = (status) => {
   });
 };
 
-export default function MapRealtime({ data }) {
+// Create rawan icon function
+const createRawanIcon = (tingkat) => {
+  const color = tingkat === "sangat rawan" ? "#f43f5e" : "#fbbf24"; // rose-500 or amber-400
+  const iconHtml = renderToString(
+    <div className="relative flex items-center justify-center">
+      <TriangleAlert
+        size={36}
+        color="white"
+        fill={color}
+        strokeWidth={1.5}
+        className="drop-shadow-lg"
+      />
+    </div>,
+  );
+
+  return L.divIcon({
+    html: iconHtml,
+    className: "custom-marker-icon",
+    iconSize: [36, 36],
+    iconAnchor: [18, 36],
+    popupAnchor: [0, -36],
+  });
+};
+
+export default function MapRealtime({ data, rawanData }) {
   useEffect(() => {
     // No longer need default icon fix when using custom icons
   }, []);
@@ -58,15 +82,17 @@ export default function MapRealtime({ data }) {
         if (!item.latitude || !item.longitude) return null;
         return (
           <Marker
-            key={item.id_sensor}
+            key={`sensor-${item.id_sensor}`}
             position={[item.latitude, item.longitude]}
             icon={createCustomIcon(item.status)}
           >
             <Popup className="custom-popup">
               <div className="p-1">
-                <h3 className="font-bold text-slate-800 text-sm mb-1">
-                  {item.nama_sensor}
-                </h3>
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="font-bold text-slate-800 text-sm">
+                    {item.nama_sensor}
+                  </h3>
+                </div>
                 <div className="space-y-1 text-xs">
                   <p className="flex justify-between gap-4">
                     <span className="text-slate-500">Ketinggian:</span>
@@ -86,6 +112,49 @@ export default function MapRealtime({ data }) {
                       }`}
                     >
                       {item.status}
+                    </span>
+                  </p>
+                </div>
+              </div>
+            </Popup>
+          </Marker>
+        );
+      })}
+
+      {rawanData?.map((item) => {
+        if (!item.latitude || !item.longitude) return null;
+        return (
+          <Marker
+            key={`rawan-${item.id_titik}`}
+            position={[item.latitude, item.longitude]}
+            icon={createRawanIcon(item.tingkat_rawan)}
+          >
+            <Popup className="custom-popup">
+              <div className="p-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <h3 className="font-bold text-slate-800 text-sm">
+                    Titik Rawan Banjir
+                  </h3>
+                </div>
+                <div className="space-y-1.5 text-xs">
+                  <p className="flex flex-col gap-0.5">
+                    <span className="text-slate-500 uppercase text-[9px] font-bold">
+                      Lokasi
+                    </span>
+                    <span className="font-semibold text-slate-900 leading-tight">
+                      {item.lokasi}, Kec. {item.kecamatan}
+                    </span>
+                  </p>
+                  <p className="flex justify-between gap-4 items-center pt-1 border-t border-slate-100">
+                    <span className="text-slate-500">Tingkat Kerawanan:</span>
+                    <span
+                      className={`px-2 py-0.5 rounded-md font-bold uppercase text-[10px] ${
+                        item.tingkat_rawan === "sangat rawan"
+                          ? "bg-rose-100 text-rose-700"
+                          : "bg-amber-100 text-amber-700"
+                      }`}
+                    >
+                      {item.tingkat_rawan}
                     </span>
                   </p>
                 </div>

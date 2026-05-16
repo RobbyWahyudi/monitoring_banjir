@@ -41,3 +41,12 @@ select{
   cursor: pointer;
 }
 
+/* Custom Leaflet Popup Font */
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  font-family: 'Inter', sans-serif !important;
+}
+
+.leaflet-popup-content {
+  font-family: 'Inter', sans-serif !important;
+}
+
