@@ -72,7 +72,8 @@ export default function WaterLevelChart({ chartData }) {
             weight: "bold",
           },
         },
-        beginAtZero: false,
+        beginAtZero: true,
+        suggestedMax: 15,
       },
     },
   };

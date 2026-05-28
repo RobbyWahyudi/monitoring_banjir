@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Waves, Lock, User, Eye, EyeOff, AlertCircle, ArrowRight, Home } from "lucide-react";
+import { Lock, User, Eye, EyeOff, AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
 export default function LoginPage() {
@@ -40,7 +40,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push("/admin");
+      window.location.href = "/admin";
     } catch (err) {
       setError("Terjadi kesalahan koneksi server");
     }
@@ -63,9 +63,6 @@ export default function LoginPage() {
           <h1 className="text-2xl font-bold font-['Poppins'] text-white tracking-tight text-center">
             Portal Admin
           </h1>
-          <p className="text-slate-400 text-xs font-medium tracking-wide mt-1 text-center">
-            MONITORING BANJIR KAB. PAMEKASAN
-          </p>
         </div>
 
         {/* Error Alert */}
@@ -138,7 +135,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 text-sm disabled:opacity-75 disabled:cursor-not-allowed group active:scale-[0.99] mt-2"
+            className="w-full py-3.5 bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 text-white font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 text-sm disabled:opacity-75 disabled:cursor-not-allowed group active:scale-[0.99] mt-8"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -150,8 +147,7 @@ export default function LoginPage() {
               </span>
             ) : (
               <>
-                Masuk Sistem
-                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                Masuk
               </>
             )}
           </button>
@@ -161,9 +157,9 @@ export default function LoginPage() {
         <div className="mt-8 pt-6 border-t border-slate-800/80 text-center">
           <Link
             href="/"
-            className="inline-flex items-center gap-2 text-slate-500 hover:text-blue-400 text-xs font-semibold tracking-wide transition-colors group"
+            className="inline-flex items-center gap-1 text-slate-500 hover:text-blue-400 text-xs font-semibold tracking-wide transition-colors group"
           >
-            <Home size={14} className="group-hover:scale-110 transition-transform" />
+            <ArrowLeft size={14} className="group-hover:scale-110 transition-transform" />
             Kembali ke Dashboard Publik
           </Link>
         </div>

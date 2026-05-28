@@ -106,15 +106,19 @@ export default function Home() {
 
         // 🔹 Update CHART (hanya sensor aktif)
         if (newData.id_sensor === selectedSensor) {
-          setChartData((prev) =>
-            [
+          setChartData((prev) => {
+            // Cegah duplikasi data yang sama (berdasarkan timestamp)
+            if (prev.some((d) => d.timestamp === newData.timestamp)) {
+              return prev;
+            }
+            return [
               ...prev,
               {
                 tinggi_air: newData.tinggi_air,
                 timestamp: newData.timestamp,
               },
-            ].slice(-15),
-          ); // ambil 15 data terakhir
+            ].slice(-15);
+          }); // ambil 15 data terakhir
         }
       });
 

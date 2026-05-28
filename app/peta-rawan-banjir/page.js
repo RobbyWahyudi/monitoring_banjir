@@ -13,6 +13,7 @@ let socket;
 export default function PetaBanjirPage() {
   const [data, setData] = useState([]);
   const [rawanData, setRawanData] = useState([]);
+  const [showLegend, setShowLegend] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -80,53 +81,123 @@ export default function PetaBanjirPage() {
           </p>
         </div>
 
-        {/* Legend Overlay */}
-        <div className="absolute bottom-8 right-4 lg:right-8 z-1000 bg-white/90 backdrop-blur-md p-4 rounded-2xl border border-white/50 shadow-xl space-y-4 min-w-50">
-          <div>
-            <div className="font-bold text-slate-800 text-xs mb-2 border-b border-slate-100 pb-2 uppercase tracking-wider">
-              Status Air (Sensor)
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-3.5 h-3.5 rounded-full bg-emerald-500 shadow-sm shadow-emerald-200" />
-                <span className="text-xs font-semibold text-slate-600">
-                  Normal (&lt; 50cm)
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3.5 h-3.5 rounded-full bg-amber-500 shadow-sm shadow-amber-200" />
-                <span className="text-xs font-semibold text-slate-600">
-                  Siaga (50-100cm)
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm shadow-rose-200" />
-                <span className="text-xs font-semibold text-slate-600">
-                  Bahaya (&gt; 100cm)
-                </span>
-              </div>
-            </div>
-          </div>
+        {/* Legend Button */}
+        <div className="absolute bottom-8 right-4 lg:right-8 z-1000">
+          {!showLegend && (
+            <button
+              onClick={() => setShowLegend(true)}
+              className="bg-white/90 backdrop-blur-md px-5 py-3 rounded-full border border-slate-200 shadow-xl font-semibold text-slate-700 hover:bg-white transition-all flex items-center gap-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-blue-500"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 16v-4"></path>
+                <path d="M12 8h.01"></path>
+              </svg>
+              Legenda
+            </button>
+          )}
 
-          <div>
-            <div className="font-bold text-slate-800 text-xs mb-2 border-b border-slate-100 pb-2 uppercase tracking-wider">
-              Kerawanan (Titik)
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[12px] border-b-rose-500 drop-shadow-sm" />
-                <span className="text-xs font-semibold text-slate-600">
-                  Sangat Rawan
-                </span>
+          {/* Legend Popup Overlay */}
+          {showLegend && (
+            <div className="bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-slate-200 shadow-2xl space-y-5 min-w-60 animate-in fade-in slide-in-from-bottom-4 duration-300 relative">
+              <button
+                onClick={() => setShowLegend(false)}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+                title="Tutup"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+
+              {/* Sensor Legend */}
+              <div>
+                <div className="font-bold text-slate-800 text-xs mb-3 border-b border-slate-200 pb-2 uppercase tracking-wider pr-6">
+                  Sensor Ketinggian Air
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 bg-blue-500 rounded-sm shadow-sm" />
+                    <span className="text-xs font-semibold text-slate-600">
+                      Lokasi Sensor
+                    </span>
+                  </div>
+                  <div className="pl-7 space-y-2">
+                    <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">
+                      Status di Pop-up:
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm" />
+                      <span className="text-[11px] font-medium text-slate-600">
+                        Normal (&lt; 5cm)
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full bg-amber-500 shadow-sm" />
+                      <span className="text-[11px] font-medium text-slate-600">
+                        Siaga (5-10cm)
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-3 h-3 rounded-full bg-rose-500 shadow-sm" />
+                      <span className="text-[11px] font-medium text-slate-600">
+                        Bahaya (&ge; 10cm)
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <div className="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[12px] border-b-amber-400 drop-shadow-sm" />
-                <span className="text-xs font-semibold text-slate-600">
-                  Rawan
-                </span>
+
+              {/* Rawan Legend */}
+              <div>
+                <div className="font-bold text-slate-800 text-xs mb-3 border-b border-slate-200 pb-2 uppercase tracking-wider">
+                  Titik Rawan Banjir
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="relative flex items-center justify-center w-5 h-5">
+                      <div className="absolute inset-0 rounded-full bg-rose-500/30 animate-pulse" />
+                      <div className="relative w-2.5 h-2.5 rounded-full bg-rose-500 border border-white" />
+                    </div>
+                    <span className="text-xs font-semibold text-slate-600">
+                      Sangat Rawan
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="relative flex items-center justify-center w-5 h-5">
+                      <div className="absolute inset-0 rounded-full bg-amber-400/30 animate-pulse" />
+                      <div className="relative w-2.5 h-2.5 rounded-full bg-amber-400 border border-white" />
+                    </div>
+                    <span className="text-xs font-semibold text-slate-600">
+                      Rawan
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

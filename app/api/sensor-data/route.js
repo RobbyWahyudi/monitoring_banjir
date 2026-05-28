@@ -6,8 +6,8 @@ export async function POST(req) {
     const { id_sensor, tinggi_air } = body;
 
     let status = "normal";
-    if (tinggi_air > 100) status = "bahaya";
-    else if (tinggi_air > 50) status = "siaga";
+    if (tinggi_air >= 10) status = "bahaya";
+    else if (tinggi_air >= 5) status = "siaga";
 
     const result = await pool.query(
       `INSERT INTO data_monitoring (id_sensor, tinggi_air, status)
