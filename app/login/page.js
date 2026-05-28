@@ -35,7 +35,9 @@ export default function LoginPage() {
       const result = await res.json();
 
       if (!res.ok) {
-        setError(result.error || "Login gagal, silakan periksa kembali akun Anda");
+        setError(
+          result.error || "Login gagal, silakan periksa kembali akun Anda",
+        );
         setLoading(false);
         return;
       }
@@ -49,13 +51,13 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950 font-sans overflow-hidden">
+    <div className="fixed inset-0 z-9999 flex items-center justify-center bg-slate-950 font-sans overflow-hidden">
       {/* Background Graphic Blobs */}
-      <div className="absolute top-0 -left-10 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse pointer-events-none" />
-      <div className="absolute bottom-0 -right-10 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse pointer-events-none" />
+      <div className="absolute top-0 -left-10 w-125 h-125 bg-blue-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse pointer-events-none" />
+      <div className="absolute bottom-0 -right-10 w-125 h-125 bg-indigo-500/10 rounded-full blur-[120px] mix-blend-screen animate-pulse pointer-events-none" />
 
       {/* Grid Pattern Overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-size-[4rem_4rem] mask-[radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
 
       <div className="w-full max-w-md bg-slate-900/80 backdrop-blur-xl rounded-2xl border border-slate-800 shadow-2xl p-8 relative z-10 m-4">
         {/* Logo / Title Section */}
@@ -139,16 +141,29 @@ export default function LoginPage() {
           >
             {loading ? (
               <span className="flex items-center gap-2">
-                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                <svg
+                  className="animate-spin h-5 w-5 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  />
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  />
                 </svg>
                 Memverifikasi...
               </span>
             ) : (
-              <>
-                Masuk
-              </>
+              <>Masuk</>
             )}
           </button>
         </form>
@@ -159,7 +174,10 @@ export default function LoginPage() {
             href="/"
             className="inline-flex items-center gap-1 text-slate-500 hover:text-blue-400 text-xs font-semibold tracking-wide transition-colors group"
           >
-            <ArrowLeft size={14} className="group-hover:scale-110 transition-transform" />
+            <ArrowLeft
+              size={14}
+              className="group-hover:scale-110 transition-transform"
+            />
             Kembali ke Dashboard Publik
           </Link>
         </div>
