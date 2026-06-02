@@ -6,8 +6,8 @@ export async function GET() {
       SELECT DISTINCT ON (s.id_sensor)
         s.id_sensor,
         s.nama_sensor,
-        s.latitude,
-        s.longitude,
+        ST_Y(s.lokasi) AS latitude,
+        ST_X(s.lokasi) AS longitude,
         d.tinggi_air,
         d.status,
         d.timestamp

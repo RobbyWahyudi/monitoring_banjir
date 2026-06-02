@@ -17,11 +17,15 @@ export async function PUT(req, { params }) {
       UPDATE sensor
       SET
         nama_sensor = $1,
-        latitude = $2,
-        longitude = $3,
+        lokasi = ST_SetSRID(ST_MakePoint($3, $2), 4326),
         tanggal_instalasi = $4
       WHERE id_sensor = $5
-      RETURNING *
+      RETURNING 
+        id_sensor,
+        nama_sensor,
+        ST_Y(lokasi) AS latitude,
+        ST_X(lokasi) AS longitude,
+        tanggal_instalasi
       `,
       [nama_sensor, latitude, longitude, tanggal_instalasi, id],
     );

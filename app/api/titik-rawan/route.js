@@ -9,10 +9,10 @@ export async function GET() {
     const result = await pool.query(`
       SELECT 
         id_titik,
-        lokasi,
+        nama_lokasi AS lokasi,
         kecamatan,
-        latitude,
-        longitude,
+        ST_Y(lokasi) AS latitude,
+        ST_X(lokasi) AS longitude,
         tingkat_rawan
       FROM titik_rawan_banjir
       ORDER BY id_titik ASC
@@ -40,14 +40,19 @@ export async function POST(req) {
       `
       INSERT INTO titik_rawan_banjir
       (
-        lokasi,
+        nama_lokasi,
         kecamatan,
-        latitude,
-        longitude,
+        lokasi,
         tingkat_rawan
       )
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING *
+      VALUES ($1, $2, ST_SetSRID(ST_MakePoint($4, $3), 4326), $5)
+      RETURNING 
+        id_titik,
+        nama_lokasi AS lokasi,
+        kecamatan,
+        ST_Y(lokasi) AS latitude,
+        ST_X(lokasi) AS longitude,
+        tingkat_rawan
       `,
       [lokasi, kecamatan, latitude, longitude, tingkat_rawan],
     );

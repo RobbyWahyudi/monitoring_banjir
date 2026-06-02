@@ -16,13 +16,18 @@ export async function PUT(req, { params }) {
       `
       UPDATE titik_rawan_banjir
       SET
-        lokasi = $1,
+        nama_lokasi = $1,
         kecamatan = $2,
-        latitude = $3,
-        longitude = $4,
+        lokasi = ST_SetSRID(ST_MakePoint($4, $3), 4326),
         tingkat_rawan = $5
       WHERE id_titik = $6
-      RETURNING *
+      RETURNING 
+        id_titik,
+        nama_lokasi AS lokasi,
+        kecamatan,
+        ST_Y(lokasi) AS latitude,
+        ST_X(lokasi) AS longitude,
+        tingkat_rawan
       `,
       [lokasi, kecamatan, latitude, longitude, tingkat_rawan, id],
     );

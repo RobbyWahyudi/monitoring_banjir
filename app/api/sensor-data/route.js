@@ -20,8 +20,8 @@ export async function POST(req) {
       `SELECT 
         s.id_sensor,
         s.nama_sensor,
-        s.latitude,
-        s.longitude,
+        ST_Y(s.lokasi) AS latitude,
+        ST_X(s.lokasi) AS longitude,
         d.tinggi_air,
         d.status,
         d.timestamp

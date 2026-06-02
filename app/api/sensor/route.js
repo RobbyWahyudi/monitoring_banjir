@@ -7,7 +7,12 @@ import pool from "@/lib/db";
 export async function GET() {
   try {
     const result = await pool.query(`
-      SELECT *
+      SELECT 
+        id_sensor,
+        nama_sensor,
+        ST_Y(lokasi) AS latitude,
+        ST_X(lokasi) AS longitude,
+        tanggal_instalasi
       FROM sensor
       ORDER BY id_sensor ASC
     `);
@@ -33,12 +38,16 @@ export async function POST(req) {
       INSERT INTO sensor
       (
         nama_sensor,
-        latitude,
-        longitude,
+        lokasi,
         tanggal_instalasi
       )
-      VALUES ($1, $2, $3, $4)
-      RETURNING *
+      VALUES ($1, ST_SetSRID(ST_MakePoint($3, $2), 4326), $4)
+      RETURNING 
+        id_sensor,
+        nama_sensor,
+        ST_Y(lokasi) AS latitude,
+        ST_X(lokasi) AS longitude,
+        tanggal_instalasi
       `,
       [nama_sensor, latitude, longitude, tanggal_instalasi],
     );
