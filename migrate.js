@@ -1,4 +1,7 @@
-import pg from 'pg';
+import dotenv from "dotenv";
+dotenv.config();
+
+import pg from "pg";
 const { Pool } = pg;
 
 const pool = new Pool({
@@ -12,9 +15,9 @@ const pool = new Pool({
 async function migrate() {
   try {
     console.log("Starting migration...");
-    
+
     // 1. Enable PostGIS
-    await pool.query('CREATE EXTENSION IF NOT EXISTS postgis;');
+    await pool.query("CREATE EXTENSION IF NOT EXISTS postgis;");
     console.log("PostGIS extension ensured.");
 
     // 2. titik_rawan_banjir changes
@@ -23,18 +26,27 @@ async function migrate() {
       SELECT data_type FROM information_schema.columns 
       WHERE table_name = 'titik_rawan_banjir' AND column_name = 'lokasi';
     `);
-    
-    if (res.rows.length > 0 && res.rows[0].data_type !== 'USER-DEFINED') {
+
+    if (res.rows.length > 0 && res.rows[0].data_type !== "USER-DEFINED") {
       // Assuming 'USER-DEFINED' for geometry. Actually, PostGIS geometry might be USER-DEFINED.
       // A better way is to check if it's text.
-      if (res.rows[0].data_type === 'character varying' || res.rows[0].data_type === 'text') {
-        console.log("Renaming 'lokasi' to 'nama_lokasi' in 'titik_rawan_banjir'");
-        await pool.query('ALTER TABLE titik_rawan_banjir RENAME COLUMN lokasi TO nama_lokasi;');
+      if (
+        res.rows[0].data_type === "character varying" ||
+        res.rows[0].data_type === "text"
+      ) {
+        console.log(
+          "Renaming 'lokasi' to 'nama_lokasi' in 'titik_rawan_banjir'",
+        );
+        await pool.query(
+          "ALTER TABLE titik_rawan_banjir RENAME COLUMN lokasi TO nama_lokasi;",
+        );
       }
     }
 
     // Add new PostGIS column
-    await pool.query('ALTER TABLE titik_rawan_banjir ADD COLUMN IF NOT EXISTS lokasi GEOMETRY(Point, 4326);');
+    await pool.query(
+      "ALTER TABLE titik_rawan_banjir ADD COLUMN IF NOT EXISTS lokasi GEOMETRY(Point, 4326);",
+    );
     console.log("Added 'lokasi' GEOMETRY column to 'titik_rawan_banjir'");
 
     // Migrate existing data if latitude and longitude columns exist
@@ -49,14 +61,18 @@ async function migrate() {
         SET lokasi = ST_SetSRID(ST_MakePoint(CAST(longitude AS float), CAST(latitude AS float)), 4326)
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL;
       `);
-      console.log("Dropping old latitude and longitude columns from 'titik_rawan_banjir'");
-      await pool.query('ALTER TABLE titik_rawan_banjir DROP COLUMN latitude;');
-      await pool.query('ALTER TABLE titik_rawan_banjir DROP COLUMN longitude;');
+      console.log(
+        "Dropping old latitude and longitude columns from 'titik_rawan_banjir'",
+      );
+      await pool.query("ALTER TABLE titik_rawan_banjir DROP COLUMN latitude;");
+      await pool.query("ALTER TABLE titik_rawan_banjir DROP COLUMN longitude;");
     }
 
     // 3. sensor changes
     // Check if 'lokasi' column exists
-    await pool.query('ALTER TABLE sensor ADD COLUMN IF NOT EXISTS lokasi GEOMETRY(Point, 4326);');
+    await pool.query(
+      "ALTER TABLE sensor ADD COLUMN IF NOT EXISTS lokasi GEOMETRY(Point, 4326);",
+    );
     console.log("Added 'lokasi' GEOMETRY column to 'sensor'");
 
     // Migrate existing data
@@ -72,8 +88,8 @@ async function migrate() {
         WHERE latitude IS NOT NULL AND longitude IS NOT NULL;
       `);
       console.log("Dropping old latitude and longitude columns from 'sensor'");
-      await pool.query('ALTER TABLE sensor DROP COLUMN latitude;');
-      await pool.query('ALTER TABLE sensor DROP COLUMN longitude;');
+      await pool.query("ALTER TABLE sensor DROP COLUMN latitude;");
+      await pool.query("ALTER TABLE sensor DROP COLUMN longitude;");
     }
 
     console.log("Migration complete!");
