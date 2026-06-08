@@ -6,9 +6,15 @@ import L from "leaflet";
 import { MapPinHouse, MapPin } from "lucide-react";
 import { renderToString } from "react-dom/server";
 
+const getColor = (status) => {
+  if (status === "bahaya") return "#ef4444"; // red-500
+  if (status === "siaga") return "#f59e0b"; // amber-500
+  return "#22C55E"; // emerald-500
+};
+
 // Create custom icon function
 const createCustomIcon = (status) => {
-  const color = "#3b82f6"; // blue-500
+  const color = getColor(status);
   const iconHtml = renderToString(
     <div className="relative flex items-center justify-center">
       <MapPinHouse

@@ -139,33 +139,22 @@ export default function PetaBanjirPage() {
                 </div>
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-4 h-4 bg-blue-500 rounded-sm shadow-sm" />
-                    <span className="text-xs font-semibold text-slate-600">
-                      Lokasi Sensor
+                    <div className="w-4 h-4 bg-emerald-500 rounded-sm shadow-sm" />
+                    <span className="text-[11px] font-medium text-slate-600">
+                      Normal
                     </span>
                   </div>
-                  <div className="pl-7 space-y-2">
-                    <div className="text-[10px] text-slate-400 font-bold uppercase mb-1">
-                      Status di Pop-up:
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-emerald-500 shadow-sm" />
-                      <span className="text-[11px] font-medium text-slate-600">
-                        Normal (&lt; 5cm)
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-amber-500 shadow-sm" />
-                      <span className="text-[11px] font-medium text-slate-600">
-                        Siaga (5-10cm)
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-3 h-3 rounded-full bg-rose-500 shadow-sm" />
-                      <span className="text-[11px] font-medium text-slate-600">
-                        Bahaya (&ge; 10cm)
-                      </span>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 bg-amber-500 rounded-sm shadow-sm" />
+                    <span className="text-[11px] font-medium text-slate-600">
+                      Siaga
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-4 bg-rose-500 rounded-sm shadow-sm" />
+                    <span className="text-[11px] font-medium text-slate-600">
+                      Bahaya
+                    </span>
                   </div>
                 </div>
               </div>
