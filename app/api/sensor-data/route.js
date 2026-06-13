@@ -6,8 +6,21 @@ export async function POST(req) {
     const { id_sensor, tinggi_air } = body;
 
     let status = "normal";
-    if (tinggi_air >= 10) status = "bahaya";
-    else if (tinggi_air >= 5) status = "siaga";
+
+    // Logika khusus per sensor (Hardcode)
+    if (id_sensor === 1) {
+      // Hulu
+      if (tinggi_air > 6.5) status = "bahaya";
+      else if (tinggi_air > 3) status = "siaga";
+    } else if (id_sensor === 2) {
+      // Hilir
+      if (tinggi_air > 9) status = "bahaya";
+      else if (tinggi_air > 5) status = "siaga";
+    } else {
+      // Default / Sensor lain
+      if (tinggi_air >= 10) status = "bahaya";
+      else if (tinggi_air >= 5) status = "siaga";
+    }
 
     const result = await pool.query(
       `INSERT INTO data_monitoring (id_sensor, tinggi_air, status)

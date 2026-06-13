@@ -42,9 +42,16 @@ export default function Home() {
       const result = await res.json();
       setData(result);
 
+      // Tentukan sensor default untuk grafik
+      let initialSensorId = selectedSensor;
+      if (result && result.length > 0) {
+        initialSensorId = result[0].id_sensor;
+        setSelectedSensor(initialSensorId);
+      }
+
       // Ambil data awal grafik
       const chartRes = await fetch(
-        `/api/history?id_sensor=${selectedSensor}&limit=15`,
+        `/api/history?id_sensor=${initialSensorId}&limit=15`,
       );
       const chartResult = await chartRes.json();
       setChartData(chartResult.data);
@@ -162,6 +169,7 @@ export default function Home() {
                 </h2>
               </div>
               <select
+                value={selectedSensor}
                 className="bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block p-3 outline-none transition-all min-w-50"
                 onChange={(e) => {
                   const val = Number(e.target.value);
