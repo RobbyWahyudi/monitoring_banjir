@@ -8,11 +8,11 @@ export async function POST(req) {
     let status = "normal";
 
     // Logika khusus per sensor (Hardcode)
-    if (id_sensor === 1) {
+    if (id_sensor === 2) {
       // Hulu
       if (tinggi_air > 6.5) status = "bahaya";
       else if (tinggi_air > 3) status = "siaga";
-    } else if (id_sensor === 2) {
+    } else if (id_sensor === 3) {
       // Hilir
       if (tinggi_air > 9) status = "bahaya";
       else if (tinggi_air > 5) status = "siaga";

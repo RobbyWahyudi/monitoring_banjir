@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import io from "socket.io-client";
 import dynamic from "next/dynamic";
 import WaterLevelChart from "@/components/WaterLevelChart";
@@ -17,6 +17,7 @@ export default function Home() {
   const [chartData, setChartData] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState(1);
   const [alerts, setAlerts] = useState([]);
+  const isFirstRender = useRef(true);
 
   const handleCloseAlert = (id) => {
     setAlerts((prev) => prev.filter((a) => a.id !== id));
@@ -42,16 +43,17 @@ export default function Home() {
       const result = await res.json();
       setData(result);
 
-      // Tentukan sensor default untuk grafik
-      let initialSensorId = selectedSensor;
-      if (result && result.length > 0) {
-        initialSensorId = result[0].id_sensor;
-        setSelectedSensor(initialSensorId);
+      // Tentukan sensor default untuk grafik HANYA saat render pertama
+      let currentSensorId = selectedSensor;
+      if (isFirstRender.current && result && result.length > 0) {
+        currentSensorId = result[0].id_sensor;
+        setSelectedSensor(currentSensorId);
+        isFirstRender.current = false;
       }
 
       // Ambil data awal grafik
       const chartRes = await fetch(
-        `/api/history?id_sensor=${initialSensorId}&limit=15`,
+        `/api/history?id_sensor=${currentSensorId}&limit=15`,
       );
       const chartResult = await chartRes.json();
       setChartData(chartResult.data);
