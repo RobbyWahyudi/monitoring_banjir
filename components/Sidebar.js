@@ -3,7 +3,16 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Map, History, Menu, X, Shield, RadioReceiver, MapPin } from "lucide-react";
+import {
+  LayoutDashboard,
+  Map,
+  History,
+  Menu,
+  X,
+  Shield,
+  RadioReceiver,
+  MapPin,
+} from "lucide-react";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -61,7 +70,9 @@ const Sidebar = () => {
     },
   ];
 
-  const menuItems = isAdmin ? [...baseMenuItems, ...adminMenuItems] : baseMenuItems;
+  const menuItems = isAdmin
+    ? [...baseMenuItems, ...adminMenuItems]
+    : baseMenuItems;
 
   return (
     <>
@@ -86,7 +97,7 @@ const Sidebar = () => {
           <div className="p-6 flex items-center gap-3 border-b border-slate-800">
             {isOpen && (
               <div className="font-['Poppins'] font-bold text-xl tracking-tight overflow-hidden whitespace-nowrap">
-                Banjir <span className="text-blue-400">Pamekasan</span>
+                Monitoring <span className="text-blue-400">Banjir</span>
               </div>
             )}
           </div>
@@ -134,15 +145,31 @@ const Sidebar = () => {
                 className={`w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg transition-all duration-200 group hover:bg-red-500/10 text-red-400 hover:text-red-300 ${!isOpen && "justify-center"}`}
               >
                 <div className="text-red-400 group-hover:text-red-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="20"
+                    height="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                  </svg>
                 </div>
-                {isOpen && <span className="font-medium whitespace-nowrap">Logout</span>}
+                {isOpen && (
+                  <span className="font-medium whitespace-nowrap">Logout</span>
+                )}
               </button>
             )}
-            
+
             {isOpen ? (
               <div className="text-xs text-slate-500 text-center">
-                &copy;2026. Monitoring Banjir <br /> Kab. Pamekasan by Robby
+                &copy;2026. Monitoring Banjir by Robby Wahyudi
               </div>
             ) : (
               <div className="flex justify-center text-blue-500 opacity-50 italic font-bold">
