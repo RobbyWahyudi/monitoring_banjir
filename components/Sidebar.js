@@ -41,8 +41,8 @@ const Sidebar = () => {
       icon: <LayoutDashboard size={20} />,
     },
     {
-      title: "Peta Rawan Banjir",
-      path: "/peta-rawan-banjir",
+      title: "Peta Sensor",
+      path: "/peta-sensor",
       icon: <Map size={20} />,
     },
     {

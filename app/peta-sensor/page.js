@@ -60,11 +60,11 @@ export default function PetaBanjirPage() {
       <div className="lg:hidden h-18 bg-white border-b border-slate-100 flex items-center justify-center px-4 shadow-sm z-10">
         <div className="flex flex-col items-center">
           <h1 className="text-xl font-bold text-slate-900 leading-none">
-            Peta Rawan Banjir
+            Peta Sensor
           </h1>
-          <p className="text-xs text-slate-500 mt-1 font-medium italic">
+          {/* <p className="text-xs text-slate-500 mt-1 font-medium italic">
             Sebaran sensor dan rawan banjir di Kabupaten Pamekasan
-          </p>
+          </p> */}
         </div>
       </div>
 
@@ -74,11 +74,11 @@ export default function PetaBanjirPage() {
         {/* Desktop Floating Header */}
         <div className="hidden lg:block absolute top-8 right-8 z-1000 bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-white/50 max-w-md">
           <h1 className="text-xl font-bold text-slate-900 leading-tight">
-            Peta Rawan Banjir
+            Peta Sensor
           </h1>
-          <p className="text-sm text-slate-600 font-medium">
+          {/* <p className="text-sm text-slate-600 font-medium">
             Sebaran sensor dan rawan banjir di Kabupaten Pamekasan
-          </p>
+          </p> */}
         </div>
 
         {/* Legend Button */}
