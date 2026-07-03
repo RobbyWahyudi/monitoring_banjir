@@ -12,7 +12,6 @@ let socket;
 
 export default function PetaBanjirPage() {
   const [data, setData] = useState([]);
-  const [rawanData, setRawanData] = useState([]);
   const [showLegend, setShowLegend] = useState(false);
 
   useEffect(() => {
@@ -23,10 +22,6 @@ export default function PetaBanjirPage() {
         const result = await res.json();
         setData(result);
 
-        // Ambil data titik rawan
-        const resRawan = await fetch("/api/titik-rawan");
-        const resultRawan = await resRawan.json();
-        setRawanData(resultRawan);
 
         // Setup socket
         const socketInstance = io();
@@ -69,7 +64,7 @@ export default function PetaBanjirPage() {
       </div>
 
       <div className="flex-1 relative">
-        <MapRealtime data={data} rawanData={rawanData} />
+        <MapRealtime data={data} />
 
         {/* Desktop Floating Header */}
         <div className="hidden lg:block absolute top-8 right-8 z-1000 bg-white/90 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-white/50 max-w-md">
@@ -159,32 +154,7 @@ export default function PetaBanjirPage() {
                 </div>
               </div>
 
-              {/* Rawan Legend */}
-              <div>
-                <div className="font-bold text-slate-800 text-xs mb-3 border-b border-slate-200 pb-2 uppercase tracking-wider">
-                  Titik Rawan Banjir
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="relative flex items-center justify-center w-5 h-5">
-                      <div className="absolute inset-0 rounded-full bg-rose-500/30 animate-pulse" />
-                      <div className="relative w-2.5 h-2.5 rounded-full bg-rose-500 border border-white" />
-                    </div>
-                    <span className="text-xs font-semibold text-slate-600">
-                      Sangat Rawan
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="relative flex items-center justify-center w-5 h-5">
-                      <div className="absolute inset-0 rounded-full bg-amber-400/30 animate-pulse" />
-                      <div className="relative w-2.5 h-2.5 rounded-full bg-amber-400 border border-white" />
-                    </div>
-                    <span className="text-xs font-semibold text-slate-600">
-                      Rawan
-                    </span>
-                  </div>
-                </div>
-              </div>
+
             </div>
           )}
         </div>

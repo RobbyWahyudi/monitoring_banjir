@@ -6,6 +6,8 @@ export default function RiwayatDataPage() {
   const [sensors, setSensors] = useState([]);
   const [historyData, setHistoryData] = useState([]);
   const [selectedSensor, setSelectedSensor] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -33,7 +35,11 @@ export default function RiwayatDataPage() {
         setLoading(true);
         try {
           const offset = (currentPage - 1) * limit;
-          const res = await fetch(`/api/history?id_sensor=${selectedSensor}&limit=${limit}&offset=${offset}`);
+          let url = `/api/history?id_sensor=${selectedSensor}&limit=${limit}&offset=${offset}`;
+          if (selectedMonth) url += `&month=${selectedMonth}`;
+          if (selectedYear) url += `&year=${selectedYear}`;
+
+          const res = await fetch(url);
           const result = await res.json();
           // Sort DESC for table view (newest first)
           setHistoryData([...result.data].reverse());
@@ -46,7 +52,7 @@ export default function RiwayatDataPage() {
       };
       fetchHistory();
     }
-  }, [selectedSensor, currentPage]);
+  }, [selectedSensor, currentPage, selectedMonth, selectedYear]);
 
   const totalPages = Math.ceil(totalRecords / limit);
 
@@ -57,7 +63,7 @@ export default function RiwayatDataPage() {
           <h1 className="text-white text-3xl font-bold tracking-tight text-slate-900">Riwayat Data</h1>
         </div>
         
-        <div className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100">
+        <div className="flex items-center gap-3 bg-white p-2 rounded-lg shadow-sm border border-slate-100 flex-wrap">
           <span className="text-sm font-medium text-slate-500 ml-2">Pilih Sensor:</span>
           <select
             className="bg-slate-50 border-none text-slate-800 text-sm font-semibold rounded-lg focus:ring-2 focus:ring-blue-500 block p-2.5 outline-none transition-all min-w-[200px]"
@@ -72,6 +78,51 @@ export default function RiwayatDataPage() {
                 {s.nama_sensor}
               </option>
             ))}
+          </select>
+
+          <div className="w-px h-6 bg-slate-200 mx-1 hidden md:block"></div>
+
+          <span className="text-sm font-medium text-slate-500 ml-2">Bulan:</span>
+          <select
+            className="bg-slate-50 border-none text-slate-800 text-sm font-semibold rounded-lg focus:ring-2 focus:ring-blue-500 block p-2.5 outline-none transition-all min-w-[120px]"
+            value={selectedMonth}
+            onChange={(e) => {
+              setSelectedMonth(e.target.value);
+              setCurrentPage(1);
+            }}
+          >
+            <option value="">Semua</option>
+            <option value="1">Januari</option>
+            <option value="2">Februari</option>
+            <option value="3">Maret</option>
+            <option value="4">April</option>
+            <option value="5">Mei</option>
+            <option value="6">Juni</option>
+            <option value="7">Juli</option>
+            <option value="8">Agustus</option>
+            <option value="9">September</option>
+            <option value="10">Oktober</option>
+            <option value="11">November</option>
+            <option value="12">Desember</option>
+          </select>
+
+          <span className="text-sm font-medium text-slate-500 ml-2">Tahun:</span>
+          <select
+            className="bg-slate-50 border-none text-slate-800 text-sm font-semibold rounded-lg focus:ring-2 focus:ring-blue-500 block p-2.5 outline-none transition-all min-w-[100px]"
+            value={selectedYear}
+            onChange={(e) => {
+              setSelectedYear(e.target.value);
+              setCurrentPage(1);
+            }}
+          >
+            <option value="">Semua</option>
+            <option value="2024">2024</option>
+            <option value="2025">2025</option>
+            <option value="2026">2026</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="2030">2030</option>
           </select>
         </div>
       </div>
